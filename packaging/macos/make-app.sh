@@ -173,6 +173,10 @@ cp packaging/macos/AppIcon-dark.icns "$APP/Contents/Resources/AppIcon-dark.icns"
 # The license, the credits for the code Hooop ports, and the notices of the
 # libraries it's built from go with every copy.
 cp LICENSE NOTICE THIRD-PARTY-NOTICES.md "$APP/Contents/Resources/"
+# Offline-capable phone companion. Run locally with Node.js 24+ when needed.
+mkdir -p "$APP/Contents/Resources/companion"
+cp -R bridge web "$APP/Contents/Resources/companion/"
+chmod +x "$APP/Contents/Resources/companion/bridge/start-mac.command"
 printf 'APPL????' > "$APP/Contents/PkgInfo"
 
 if [[ $sign == 1 ]]; then

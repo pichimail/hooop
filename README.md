@@ -2,11 +2,11 @@
 
 # Hooop
 
-**A thoughtful embroidery studio for macOS, Windows, and the browser.**
+**An embroidery studio, multi-machine export hub and paired mobile companion for macOS, Windows, and browsers.**
 
 Hooop combines a native, Rust-powered embroidery editor with a new mobile-friendly SVG composition studio. Create and refine SVG artwork on the web, then finish precision machine digitization with the macOS or Windows application.
 
-- **Browser / mobile:** [Open Hooop Web Studio](https://hooop.vercel.app/studio/) · [Start here](https://hooop.vercel.app/guide/)
+- **Browser / mobile:** [Open Hooop Web Studio](https://hooop.vercel.app/studio/) · [Machines & mobile](https://hooop.vercel.app/devices/) · [Start here](https://hooop.vercel.app/guide/)
 - **Mac and Windows downloads:** [Hooop 0.1.6 native desktop prerelease](https://github.com/pichimail/hooop/releases/tag/v0.1.6) — universal macOS DMG, Windows GUI EXE, complete Windows CLI/MCP ZIP, checksums and license notices.
 - **Source:** [pichimail/hooop](https://github.com/pichimail/hooop)
 
@@ -17,6 +17,11 @@ Hooop combines a native, Rust-powered embroidery editor with a new mobile-friend
 | Responsive design canvas | ✓ | ✓ |
 | Basic shapes, lettering and SVG editing | ✓ | ✓ |
 | Import SVG | Basic shapes and paths | Full native importer |
+| Import logos/photos into editable vector regions | Local browser tracing | Native VectorCraft raster tracing |
+| Authenticated phone monitor and native export/download | With desktop Companion | Native CLI required |
+| USB/mounted-drive export | Via paired desktop Companion | Via Companion |
+| LAN file transfer | Only approved HTTPS receiver configured on desktop | Companion (approved endpoints) |
+| Generic BLE advertising scan | Via paired desktop Companion | Passive discovery, no universal controls |
 | Export SVG | ✓ | ✓ |
 | Export PNG | ✓ | ✓ (native export workflow) |
 | Undo, redo, layers, properties | ✓ | ✓ |
@@ -27,16 +32,22 @@ Hooop combines a native, Rust-powered embroidery editor with a new mobile-friend
 | Agent MCP bridge and CLI | — | ✓ |
 | Comprehensive digitization features | — | ✓ |
 
-**Compatibility note:** Browser Hooop is a newly added SVG design companion, not a WebAssembly port of the Rust embroidery engine. It **cannot** create production embroidery files or connect to a Bluetooth embroidery machine. SVG import in the web client intentionally supports a restricted set of primitive shapes and paths; complex transforms, groups, font outlines and other arbitrary SVG features are not preserved. The original native features remain in the desktop source.
+**Compatibility note:** Browser Hooop is a newly added SVG design companion, not a WebAssembly port of the Rust embroidery engine. The cloud web edition **cannot** directly create production embroidery files or connect to a Bluetooth embroidery machine. A paired self-hosted Hooop Companion bridges native file exports and device discovery to a phone; only the known Brother Skitch PP1 protocol currently supports direct BLE machine commands. SVG import in the web client intentionally supports a restricted set of primitive shapes and paths; complex transforms, groups, font outlines and other arbitrary SVG features are not preserved. The original native features remain in the desktop source.
 
 ## Quick start — browser
 
 1. Open `/studio/` on desktop or mobile. No sign-in is required.
 2. Draw an ellipse, rectangle, line, freehand path or text; tap or click any layer to edit.
 3. Change color, stroke and position in Properties. Use **Stitch view** for a non-production visual texture.
-4. Export **SVG** or **PNG**. Open the SVG in native Hooop for real machine output.
+4. Use **Image → design** to trace photo/logo color regions into editable paths on device. Export SVG/PNG or pair with the desktop Companion for real PES/DST/etc. file conversion.
 
 Use the Quick Start tour at `/guide/` in the deployed website. On mobile, use **Add to Home Screen / Install app** to create a full-screen PWA shortcut. Local autosave is device- and browser-specific; exporting your work is recommended.
+
+## Universal machine hub and paired phone monitor
+
+Visit [Machines & mobile](https://hooop.vercel.app/devices/) to browse profile/hoop/format coverage. For real scanning, native conversion, and phone monitoring, run the optional [Hooop Companion](bridge/README.md) on your own computer using **Node.js 24+**, the built desktop CLI and trusted HTTPS if a phone connects over LAN. The public website cannot control private hardware on its own. Device identification does not imply that its Bluetooth/Wi-Fi/USB protocol is supported.
+
+All core native design and machine-file exports run locally without paid subscriptions. The browser image trace works offline. Optional consent-based provider vision advice requires your own provider API key and may incur usage charges. Machine control and physical sewing have not been certified across different brands.
 
 ## Native macOS build
 

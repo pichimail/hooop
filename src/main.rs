@@ -61,6 +61,14 @@ enum Cmd {
         #[arg(long)]
         raw: bool,
     },
+    /// Discover advertised Bluetooth LE devices without pairing or sending commands.
+    /// Only the Brother Skitch PP1 protocol is currently implemented; all other
+    /// BLE devices are discovery-only even if they advertise embroidery names.
+    Discover {
+        /// Seconds to scan (2–15).
+        #[arg(long, default_value_t = 6)]
+        scan: u64,
+    },
     /// Talk to a Brother Skitch (PP1) over Bluetooth.
     Skitch {
         #[command(subcommand)]
@@ -287,6 +295,7 @@ fn main() -> Result<()> {
                 );
             }
         }
+        Cmd::Discover { scan } => discover_devices(scan)?,
         Cmd::Skitch { cmd, name, scan } => skitch(cmd, name, scan)?,
         Cmd::Capture { file, all, raw } => {
             use zigzag::machine::capture;
@@ -513,5 +522,51 @@ fn skitch(cmd: SkitchCmd, name: Option<String>, scan: u64) -> Result<()> {
         .await;
         let _ = m.disconnect().await;
         result
+    })
+}
+
+/// Passive discovery only. Never infer the communication protocol from a
+/// Bluetooth name; only the known Skitch service UUID earns "skitch".
+#[cfg(not(feature = "ble"))]
+fn discover_devices(_scan: u64) -> Result<()> {
+    bail!("this build has no Bluetooth support; rebuild with --features ble")
+}
+
+#[cfg(feature = "ble")]
+fn discover_devices(scan: u64) -> Result<()> {
+    use btleplug::api::{Central, Manager as _, Peripheral as _, ScanFilter};
+    use btleplug::platform::Manager;
+    use std::hash::{Hash, Hasher};
+    let rt = tokio::runtime::Runtime::new()?;
+    rt.block_on(async move {
+        let manager = Manager::new().await?;
+        let adapter = manager.adapters().await?.into_iter().next()
+            .ok_or_else(|| anyhow::anyhow!("No Bluetooth adapter available"))?;
+        adapter.start_scan(ScanFilter::default()).await?;
+        tokio::time::sleep(std::time::Duration::from_secs(scan.clamp(2, 15))).await;
+        let service = uuid::Uuid::parse_str(zigzag::machine::protocol::SERVICE_UUID)?;
+        let mut devices = Vec::new();
+        for peripheral in adapter.peripherals().await?.into_iter().take(100) {
+            if let Some(props) = peripheral.properties().await? {
+                let is_skitch = props.services.contains(&service);
+                let mut hasher = std::collections::hash_map::DefaultHasher::new();
+                format!("{:?}", peripheral.id()).hash(&mut hasher);
+                let name = props.local_name.filter(|s| !s.trim().is_empty())
+                    .unwrap_or_else(|| "Unnamed BLE peripheral".to_owned());
+                devices.push(serde_json::json!({
+                    "id": format!("ble-{:016x}", hasher.finish()),
+                    "name": name,
+                    "kind": "bluetooth-le",
+                    "service_count": props.services.len(),
+                    "rssi": props.rssi,
+                    "protocol": if is_skitch { "skitch" } else { "unknown" },
+                    "direct_control": is_skitch,
+                    "tested": false
+                }));
+            }
+        }
+        let _ = adapter.stop_scan().await;
+        println!("{}", serde_json::json!({"scanned": true, "devices": devices}));
+        Ok::<(), anyhow::Error>(())
     })
 }
