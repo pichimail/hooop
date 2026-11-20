@@ -93,3 +93,7 @@ This project is an adaptation of the Apache 2.0-licensed **ZigZag** embroidery s
 ## Release status
 
 **Web:** publishable static PWA. **Desktop:** source rebranded, build scripts and GitHub Actions included. A downloadable `.dmg` or `.exe` must be successfully built and uploaded to a Hooop release before announcing it as available. macOS notarization requires the owner's Apple signing credentials.
+
+## Restoring the original optional demo video
+
+The original demo clip is intact in the downloadable source ZIP. In GitHub, the 5.1 MB asset is split into three binary segments under `packaging/media/` to respect publishing limits. Reassemble with `bash packaging/media/restore-demo.sh` after cloning, if needed. The embroidery studio does not require this video for operation.
