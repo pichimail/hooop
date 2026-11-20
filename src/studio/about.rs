@@ -6,7 +6,7 @@ use crate::app::Studio;
 use eframe::egui;
 
 /// Hooop's home: the source, the releases and the issues.
-pub const GITHUB_URL: &str = "https://github.com/simpsoka/zigzag";
+pub const GITHUB_URL: &str = "https://github.com/pichimail/hooop";
 
 impl Studio {
     /// The About window.
@@ -31,7 +31,7 @@ impl Studio {
                 );
                 ui.add_space(crate::theme::space::S);
                 if ui
-                    .link(egui::RichText::new("github.com/simpsoka/zigzag").size(13.0))
+                    .link(egui::RichText::new("github.com/pichimail/hooop").size(13.0))
                     .on_hover_text(GITHUB_URL)
                     .clicked()
                 {
