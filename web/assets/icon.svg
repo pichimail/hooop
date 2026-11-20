@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Hooop app icon">
+ <rect width="1024" height="1024" rx="228" fill="#f6f6f2"/>
+ <circle cx="512" cy="512" r="311" stroke="#232729" stroke-width="32" fill="none"/>
+ <path d="M416 357V664M608 357V664" fill="none" stroke="#232729" stroke-width="44" stroke-linecap="round"/>
+ <path d="M416 511C470 488 544 537 608 511" fill="none" stroke="#607f88" stroke-width="36" stroke-linecap="round"/>
+ <circle cx="736" cy="290" r="22" fill="#607f88"/>
+ </svg>
