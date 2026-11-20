@@ -20,6 +20,21 @@ node .\bridge\server.mjs
 
 The terminal prints a random six-digit code at startup. Open Machines & Phone in the local Companion, pair using that code and scan devices. The public https://hooop.vercel.app/devices/ page is a **catalog and setup surface**, not a connection to your private desktop.
 
+## Simplest private remote phone connection — Tailscale Serve
+
+Tailscale Serve is an **optional third-party networking tool**, not a subscription or API requirement for embroidery. Install the Tailscale client on your desktop and phone and log in to the same private tailnet. Then:
+
+```bash
+# Terminal 1: leave the Hooop Companion running on its default local port.
+node bridge/server.mjs
+
+# Terminal 2: privately publish that LOCAL loopback port with managed HTTPS.
+tailscale serve --bg 4787
+tailscale serve status
+```
+
+Open the HTTPS `*.ts.net` URL shown by Serve on your phone, navigate to `/devices/`, and enter the Hooop pairing PIN printed in Terminal 1. This also works when your phone is outside home Wi-Fi provided both devices remain connected to the private tailnet and your desktop remains on. No TLS cert files need to be generated in this mode: Tailscale terminates HTTPS while the bridge stays loopback-only. Use `tailscale serve off` when you no longer want remote access. **Never use `tailscale funnel` for machine control; Funnel publishes publicly.** More information: https://tailscale.com/docs/features/tailscale-serve .
+
 ## Pairing on a phone (same Wi-Fi/LAN)
 
 The companion **intentionally binds only to loopback over HTTP**. Remote phones require trusted HTTPS with both a certificate and key. An internal/private TLS certificate must be trusted on each phone. Tailscale with HTTPS (or a LAN reverse proxy with a trusted certificate) is suitable; *do not* expose an unauthenticated HTTP port on the public Internet.
