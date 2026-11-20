@@ -7,7 +7,7 @@
 Hooop combines a native, Rust-powered embroidery editor with a new mobile-friendly SVG composition studio. Create and refine SVG artwork on the web, then finish precision machine digitization with the macOS or Windows application.
 
 - **Browser / mobile:** [Open Hooop Web Studio](https://hooop.vercel.app/studio/) · [Machines & mobile](https://hooop.vercel.app/devices/) · [Start here](https://hooop.vercel.app/guide/)
-- **Mac and Windows downloads:** [Hooop 0.1.6 native desktop prerelease](https://github.com/pichimail/hooop/releases/tag/v0.1.6) — universal macOS DMG, Windows GUI EXE, complete Windows CLI/MCP ZIP, checksums and license notices.
+- **Mac and Windows downloads:** [Hooop Universal Preview native desktop release](https://github.com/pichimail/hooop/releases/tag/v0.1.6-universal.1) — universal macOS DMG, Windows GUI EXE, complete Windows CLI/MCP ZIP, checksums and license notices.
 - **Source:** [pichimail/hooop](https://github.com/pichimail/hooop)
 
 ## What works where
@@ -103,7 +103,7 @@ This project is an adaptation of the Apache 2.0-licensed **ZigZag** embroidery s
 
 ## Release status
 
-**Web:** deployed PWA. **Desktop:** [Hooop 0.1.6 unsigned test release](https://github.com/pichimail/hooop/releases/tag/v0.1.6) is published with a **universal macOS DMG** and **Windows x64 GUI EXE**. GitHub Actions passed macOS/Windows compilation, universal Mac architecture checks, macOS DMG integrity, and real SVG-to-PES/DST conversion smoke tests on both systems. The Windows EXE is verified as a GUI-subsystem executable. Physical machine transfer, real sewing and complete interactive UI behavior are **not certified** without on-device tests. Mac Developer ID signing/notarization and Windows publisher signing remain outstanding. Windows may need the [free Microsoft VC++ x64 runtime](https://aka.ms/vc14/vc_redist.x64.exe); AI agent features need separate Codex/Claude CLI access, while core local embroidery exports require no paid API.
+**Web:** deployed PWA. **Desktop:** [Hooop Universal unsigned preview release](https://github.com/pichimail/hooop/releases/tag/v0.1.6-universal.1) is published with a **universal macOS DMG** and **Windows x64 GUI EXE**. GitHub Actions passed macOS/Windows compilation, universal Mac architecture checks, macOS DMG integrity, and real SVG-to-PES/DST conversion smoke tests on both systems. The Windows EXE is verified as a GUI-subsystem executable. Physical machine transfer, real sewing and complete interactive UI behavior are **not certified** without on-device tests. Mac Developer ID signing/notarization and Windows publisher signing remain outstanding. Windows may need the [free Microsoft VC++ x64 runtime](https://aka.ms/vc14/vc_redist.x64.exe); AI agent features need separate Codex/Claude CLI access, while core local embroidery exports require no paid API.
 
 ## Restoring the original optional demo video
 
