@@ -2,7 +2,7 @@ import test from 'node:test';import assert from 'node:assert/strict';import fs f
 const svg='<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="80" height="80" fill="red"/></svg>';
 const input={name:'test-design',profile:'brother-4x4',mime:'image/svg+xml',data:Buffer.from(svg).toString('base64')};
 async function setup({write=false}={}){
- const root=await fs.mkdtemp(path.join(os.tmpdir(),'hooop-test-drive-'));
+ const root=await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(),'hooop-test-drive-')));
  const fakeVolume={id:'volume-test',name:'USB-STICK',path:root,kind:'usb-volume'};
  let calls=[];
  const c=createCompanion({env:{HOOOP_LOCAL_PIN:'123456',HOOOP_ALLOW_REMOTE_TRANSFER:write?'1':'0'},cli:'fake-zigzag',usbFinder:async()=>[fakeVolume],lanFinder:async()=>[],bleFinder:async()=>({status:'available',devices:[]}),runNative:async args=>{calls.push(args);
@@ -39,7 +39,7 @@ test('Real native adapter invocation creates downloadable machine file; remote c
   assert.equal((await request(s,'transfer',{method:'POST',body:{job_id:job.id,method:'ble-skitch',target:'x',confirm:true},token})).status,403);
   const t=await request(s,'transfer',{method:'POST',body:{job_id:job.id,method:'usb-file',target:'volume-test',confirm:true},token});assert.equal(t.status,202);
   let transferState;for(let i=0;i<60;i++){transferState=(await request(s,'jobs/'+job.id,{token})).data.job.transferState;if(transferState==='completed'||transferState==='failed')break;await sleep(30)}
-  assert.equal(transferState,'completed');assert.equal((await fs.readFile(path.join(s.root,'test-design.pes'))).byteLength,150);
+  assert.equal(transferState,'completed',job.transferError||'USB transfer did not finish');assert.equal((await fs.readFile(path.join(s.root,'test-design.pes'))).byteLength,150);
  }finally{await s.close()}
 });
 test('Bridge does not expose unapproved transfers or arbitrary external URLs',async()=>{
