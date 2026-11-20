@@ -1,12 +1,19 @@
 name: Hooop desktop builds
 on:
   workflow_dispatch:
+    inputs:
+      platform:
+        description: "Platforms to build"
+        type: choice
+        options: [all, mac, windows]
+        default: all
   push:
     tags: ['v*']
 permissions:
   contents: read
 jobs:
   mac:
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.platform != 'windows' }}
     name: macOS DMG (unsigned test build)
     runs-on: macos-15
     timeout-minutes: 80
@@ -31,6 +38,7 @@ jobs:
           path: dist/Hooop-*.dmg
           if-no-files-found: error
   windows:
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.platform != 'mac' }}
     name: Windows x64 (unsigned test build)
     runs-on: windows-2022
     timeout-minutes: 80
@@ -55,6 +63,10 @@ jobs:
       - name: Verify real embroidery exports from compiled Windows CLI
         shell: pwsh
         run: |
+          $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path "dist/Hooop-windows/Hooop.exe"))
+          $optionalHeader = [BitConverter]::ToInt32($bytes, 0x3c) + 24
+          $subsystem = [BitConverter]::ToUInt16($bytes, $optionalHeader + 68)
+          if ($subsystem -ne 2) { throw "Hooop.exe is not a Windows GUI subsystem executable (actual: $subsystem)" }
           & target/release/zigzag.exe --help | Out-Null
           if ($LASTEXITCODE -ne 0) { throw "CLI failed" }
           & target/release/zigzag.exe convert examples/badge.svg --out "$env:RUNNER_TEMP/hooop-smoke.dst" --out "$env:RUNNER_TEMP/hooop-smoke.pes"
