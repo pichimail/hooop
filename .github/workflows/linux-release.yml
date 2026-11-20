@@ -23,6 +23,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.event_name == 'workflow_dispatch' || github.event.release.prerelease == false
     name: Build and test x86-64 Linux binaries
     runs-on: ubuntu-24.04
     # Keep the glibc baseline at 2.35 without relying on an old hosted runner.
