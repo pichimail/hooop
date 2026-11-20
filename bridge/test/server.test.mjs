@@ -38,7 +38,8 @@ test('Real native adapter invocation creates downloadable machine file; remote c
   assert.equal((await request(s,'transfer',{method:'POST',body:{job_id:job.id,method:'usb-file',target:'volume-test'},token})).status,400);
   assert.equal((await request(s,'transfer',{method:'POST',body:{job_id:job.id,method:'ble-skitch',target:'x',confirm:true},token})).status,403);
   const t=await request(s,'transfer',{method:'POST',body:{job_id:job.id,method:'usb-file',target:'volume-test',confirm:true},token});assert.equal(t.status,202);
-  await sleep(60);assert.equal((await fs.readFile(path.join(s.root,'test-design.pes'))).byteLength,150);
+  let transferState;for(let i=0;i<60;i++){transferState=(await request(s,'jobs/'+job.id,{token})).data.job.transferState;if(transferState==='completed'||transferState==='failed')break;await sleep(30)}
+  assert.equal(transferState,'completed');assert.equal((await fs.readFile(path.join(s.root,'test-design.pes'))).byteLength,150);
  }finally{await s.close()}
 });
 test('Bridge does not expose unapproved transfers or arbitrary external URLs',async()=>{
