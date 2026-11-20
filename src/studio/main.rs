@@ -1,3 +1,5 @@
+#![cfg_attr(target_os = "windows", windows_subsystem = "windows")]
+
 //! Hooop studio: visual stitch editor (egui, OpenGL via glow) with an
 //! MCP server so agents can work on the same canvas.
 
