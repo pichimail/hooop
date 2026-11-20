@@ -486,7 +486,7 @@ pub fn issue_url() -> String {
         },
         std::env::consts::ARCH,
     );
-    let mut url = String::from("https://github.com/simpsoka/zigzag/issues/new?body=");
+    let mut url = String::from("https://github.com/pichimail/hooop/issues/new?body=");
     for b in body.bytes() {
         match b {
             b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => {
@@ -1150,7 +1150,7 @@ mod tests {
         );
         let url = issue_url();
         let (page, body) = url.split_once("?body=").unwrap();
-        assert_eq!(page, "https://github.com/simpsoka/zigzag/issues/new");
+        assert_eq!(page, "https://github.com/pichimail/hooop/issues/new");
         // One word to the browser: nothing in it that ends or splits a URL.
         assert!(
             body.bytes()
